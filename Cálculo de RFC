@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+class Empleado {
+private:
+    string nombre;
+    string apellidoPaterno;
+    string apellidoMaterno;
+    int anio, mes, dia;
+
+public:
+    void capturarDatos() {
+        cout << "Nombre: ";
+        getline(cin, nombre);
+        cout << "Apellido paterno: ";
+        getline(cin, apellidoPaterno);
+        cout << "Apellido materno: ";
+        getline(cin, apellidoMaterno);
+        cout << "Año de nacimiento (YYYY): ";
+        cin >> anio;
+        cout << "Mes de nacimiento (MM): ";
+        cin >> mes;
+        cout << "Día de nacimiento (DD): ";
+        cin >> dia;
+        cin.ignore();
+    }
+
+    string obtenerRFC() {
+        string rfc;
+
+        rfc += toupper(apellidoPaterno[0]);
+
+        bool vocalEncontrada = false;
+        for (size_t i = 1; i < apellidoPaterno.length(); ++i) {
+            char c = toupper(apellidoPaterno[i]);
+            if (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+                rfc += c;
+                vocalEncontrada = true;
+                break;
+            }
+        }
+        if (!vocalEncontrada) rfc += 'X';
+
+        rfc += apellidoMaterno.empty() ? 'X' : toupper(apellidoMaterno[0]);
+
+        rfc += toupper(nombre[0]);
+
+        rfc += to_string(anio).substr(2, 2);
+        rfc += (mes < 10 ? "0" : "") + to_string(mes);
+        rfc += (dia < 10 ? "0" : "") + to_string(dia);
+
+        rfc += "XXX";
+
+        return rfc;
+    }
+
+    void mostrarResultado() {
+        cout << "\n--- Resultado del RFC ---" << endl;
+        cout << "Nombre completo: " << nombre << " " << apellidoPaterno << " " << apellidoMaterno << endl;
+        cout << "Fecha de nacimiento: " << dia << "/" << mes << "/" << anio << endl;
+        cout << "RFC generado sin homoclave: " << obtenerRFC() << endl;
+        cout << "-------------------------" << endl;
+    }
+};
+
+int main() {
+    Empleado nuevoEmpleado;
+    nuevoEmpleado.capturarDatos();
+    nuevoEmpleado.mostrarResultado();
+
+    return 0;
+}
