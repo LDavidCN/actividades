@@ -1,0 +1,34 @@
+CREATE DATABASE CoppelDavid;
+GO
+
+USE CoppelDavid;
+GO
+
+-- Tabla Puesto
+CREATE TABLE Puesto (
+    id_puesto INT IDENTITY(1,1) PRIMARY KEY,
+    nombre_puesto VARCHAR(100),
+    descripcion VARCHAR(255)
+);
+
+-- Tabla Empleado
+CREATE TABLE Empleado (
+    id_empleado INT IDENTITY(1,1) PRIMARY KEY,
+    nombre VARCHAR(100),
+    apellido_paterno VARCHAR(100),
+    apellido_materno VARCHAR(100),
+    fecha_nacimiento DATE,
+    rfc VARCHAR(20),
+    centro_trabajo VARCHAR(100),
+    es_directivo BIT,
+    id_puesto INT,
+    FOREIGN KEY (id_puesto) REFERENCES Puesto(id_puesto)
+);
+
+-- Tabla Directivo
+CREATE TABLE Directivo (
+    id_empleado INT PRIMARY KEY,
+    num_centro_supervisa INT,
+    prestacion_combustible BIT,
+    FOREIGN KEY (id_empleado) REFERENCES Empleado(id_empleado)
+);
