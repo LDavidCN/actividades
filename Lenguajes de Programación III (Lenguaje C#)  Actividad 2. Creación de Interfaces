@@ -1,0 +1,389 @@
+namespace Actividad2;
+
+public sealed class GreetingForm : Form
+{
+    private readonly TextBox name = Ui.TextBox();
+
+    public GreetingForm()
+    {
+        Ui.Configure(this, "Saludo");
+        Size = new Size(720, 480);
+        Controls.Add(Ui.Header("Formulario de saludo", "Ingresa tu nombre para recibir un mensaje personalizado"));
+        var content = new Panel { BackColor = Color.White, Location = new Point(110, 145), Size = new Size(480, 200), BorderStyle = BorderStyle.FixedSingle };
+        content.Controls.Add(new Label { Text = "Ingresa tu nombre:", AutoSize = true, Font = new Font("Segoe UI", 12, FontStyle.Bold), Location = new Point(55, 40) });
+        name.Location = new Point(55, 76);
+        name.Width = 370;
+        content.Controls.Add(name);
+        content.Controls.Add(Ui.Button("Saludar", new Point(305, 125), (_, _) => Greet()));
+        Controls.Add(content);
+    }
+
+    private void Greet()
+    {
+        var person = name.Text.Trim();
+        if (string.IsNullOrWhiteSpace(person))
+        {
+            MessageBox.Show("Escribe tu nombre antes de continuar.", "Dato requerido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            name.Focus();
+            return;
+        }
+        MessageBox.Show($"{person}, ¡bienvenido(a) a la aplicación!", "Saludo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+}
+
+public sealed class LoginForm : Form
+{
+    private const string AccessPassword = "A2CSharp";
+    private readonly TextBox password = Ui.TextBox();
+
+    public LoginForm()
+    {
+        Ui.Configure(this, "Acceso al sistema");
+        Size = new Size(560, 420);
+        Controls.Add(Ui.Header("Acceso al sistema", "Actividad 2 · Lenguajes de Programación III"));
+
+        var card = new Panel { BackColor = Color.White, Size = new Size(390, 190), Location = new Point(78, 135), BorderStyle = BorderStyle.FixedSingle };
+        card.Controls.Add(new Label { Text = "Contraseña de acceso", Font = new Font("Segoe UI", 12, FontStyle.Bold), AutoSize = true, Location = new Point(35, 28) });
+        password.Location = new Point(35, 66);
+        password.Width = 315;
+        password.UseSystemPasswordChar = true;
+        password.KeyDown += (_, e) => { if (e.KeyCode == Keys.Enter) Authenticate(); };
+        card.Controls.Add(password);
+        card.Controls.Add(Ui.Button("Ingresar", new Point(225, 115), (_, _) => Authenticate()));
+        card.Controls.Add(new Label { Text = "Clave de demostración: A2CSharp", ForeColor = Color.DimGray, AutoSize = true, Location = new Point(35, 128) });
+        Controls.Add(card);
+    }
+
+    private void Authenticate()
+    {
+        if (password.Text == AccessPassword)
+        {
+            Hide();
+            using var main = new MainForm();
+            main.ShowDialog();
+            Close();
+            return;
+        }
+        MessageBox.Show("La contraseña no es correcta.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        password.SelectAll();
+        password.Focus();
+    }
+}
+
+namespace Actividad2;
+
+public sealed class MainForm : Form
+{
+    public MainForm()
+    {
+        Ui.Configure(this, "Menú principal");
+        Size = new Size(860, 560);
+        var menu = new MenuStrip { BackColor = Color.White, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
+        menu.Items.Add("Saludo", null, (_, _) => new GreetingForm().ShowDialog(this));
+        menu.Items.Add("Datos Personales", null, (_, _) => new PersonalDataForm().ShowDialog(this));
+        menu.Items.Add("Operaciones Básicas", null, (_, _) => new OperationsForm().ShowDialog(this));
+        menu.Items.Add("Salir", null, (_, _) => Close());
+        MainMenuStrip = menu;
+        Controls.Add(menu);
+        Controls.Add(Ui.Header("Menú principal", "Selecciona una opción para comenzar"));
+
+        var text = new Label
+        {
+            Text = "Bienvenido(a)\n\nEsta aplicación integra controles, menús funcionales y formularios de Windows Forms.",
+            Font = new Font("Segoe UI", 14), AutoSize = false, TextAlign = ContentAlignment.MiddleCenter,
+            Size = new Size(640, 125), Location = new Point(105, 165), ForeColor = Ui.Navy
+        };
+        Controls.Add(text);
+        var actions = new FlowLayoutPanel { Location = new Point(170, 325), Size = new Size(520, 65), FlowDirection = FlowDirection.LeftToRight };
+        actions.Controls.Add(Ui.Button("Saludo", (_, _) => new GreetingForm().ShowDialog(this)));
+        actions.Controls.Add(Ui.Button("Datos personales", (_, _) => new PersonalDataForm().ShowDialog(this)));
+        actions.Controls.Add(Ui.Button("Operaciones", (_, _) => new OperationsForm().ShowDialog(this)));
+        Controls.Add(actions);
+    }
+}
+
+namespace Actividad2;
+
+public sealed class MedicalForm : Form
+{
+    public MedicalForm()
+    {
+        Ui.Configure(this, "Cuestionario médico");
+        Size = new Size(800, 600);
+        Controls.Add(Ui.Header("Cuestionario médico", "Responde las cinco preguntas solicitadas"));
+        var table = new TableLayoutPanel { Location = new Point(55, 125), Size = new Size(670, 310), ColumnCount = 2, RowCount = 5, BackColor = Color.White, Padding = new Padding(22) };
+        table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62));
+        table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38));
+        AddQuestion(table, 0, "¿Padeces de alguna enfermedad?", ["Ninguna", "Diabetes", "Hipertensión", "Asma", "Otra"]);
+        AddQuestion(table, 1, "¿Tienes alergias?", ["Ninguna", "Alimentos", "Medicamentos", "Polen", "Otra"]);
+        AddQuestion(table, 2, "¿Alguna vez te han operado?", ["No", "Sí, cirugía menor", "Sí, cirugía mayor"]);
+        AddQuestion(table, 3, "¿Haces ejercicio?", ["No", "1 a 2 días", "3 a 5 días", "Diariamente"]);
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
+        table.Controls.Add(new Label { Text = "¿Padeces de depresión?", AutoSize = true, Anchor = AnchorStyles.Left, Font = new Font("Segoe UI", 10, FontStyle.Bold) }, 0, 4);
+        var depression = new FlowLayoutPanel { AutoSize = true, Anchor = AnchorStyles.Left };
+        depression.Controls.Add(new RadioButton { Text = "Sí", AutoSize = true });
+        depression.Controls.Add(new RadioButton { Text = "No", AutoSize = true, Checked = true });
+        table.Controls.Add(depression, 1, 4);
+        Controls.Add(table);
+        Controls.Add(Ui.Button("Guardar respuestas", new Point(460, 465), (_, _) => MessageBox.Show("Respuestas guardadas.", "Cuestionario médico", MessageBoxButtons.OK, MessageBoxIcon.Information)));
+        Controls.Add(Ui.Button("Regresar", new Point(300, 465), (_, _) => Close(), Color.SlateGray));
+    }
+
+    private static void AddQuestion(TableLayoutPanel panel, int row, string question, string[] options)
+    {
+        panel.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
+        panel.Controls.Add(new Label { Text = question, AutoSize = true, Anchor = AnchorStyles.Left, Font = new Font("Segoe UI", 10, FontStyle.Bold) }, 0, row);
+        var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 215, Anchor = AnchorStyles.Left };
+        combo.Items.AddRange(options);
+        panel.Controls.Add(combo, 1, row);
+    }
+}
+
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <clear />
+  </packageSources>
+</configuration>
+
+using System.Globalization;
+
+namespace Actividad2;
+
+public sealed class OperationsForm : Form
+{
+    private readonly TextBox[] values = Enumerable.Range(1, 6).Select(_ => Ui.TextBox()).ToArray();
+    private readonly Label result = new() { AutoSize = false, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 14, FontStyle.Bold), ForeColor = Ui.Navy, BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
+
+    public OperationsForm()
+    {
+        Ui.Configure(this, "Operaciones básicas");
+        Size = new Size(900, 660);
+        Controls.Add(Ui.Header("Operaciones básicas", "Ingresa seis números diferentes y elige la operación que deseas realizar"));
+        var grid = new TableLayoutPanel { Location = new Point(75, 125), Size = new Size(360, 300), ColumnCount = 2, RowCount = 6, BackColor = Color.White, Padding = new Padding(25) };
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42));
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58));
+        for (var i = 0; i < values.Length; i++)
+        {
+            grid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / values.Length));
+            grid.Controls.Add(new Label { Text = $"Número {i + 1}:", AutoSize = true, Anchor = AnchorStyles.Left, Font = new Font("Segoe UI", 10, FontStyle.Bold) }, 0, i);
+            values[i].Width = 175;
+            values[i].Anchor = AnchorStyles.Left;
+            grid.Controls.Add(values[i], 1, i);
+        }
+        Controls.Add(grid);
+
+        var actions = new FlowLayoutPanel { Location = new Point(480, 140), Size = new Size(280, 220), FlowDirection = FlowDirection.TopDown, WrapContents = false };
+        actions.Controls.Add(Ui.Button("Suma", (_, _) => Calculate(numbers => numbers.Sum())));
+        actions.Controls.Add(Ui.Button("Resta", (_, _) => Calculate(numbers => numbers.Skip(1).Aggregate(numbers[0], (total, number) => total - number))));
+        actions.Controls.Add(Ui.Button("Multiplicación", (_, _) => Calculate(numbers => numbers.Aggregate(1D, (total, number) => total * number))));
+        actions.Controls.Add(Ui.Button("División", (_, _) => Calculate(Divide)));
+        var clearButton = Ui.Button("Limpiar", (_, _) => Clear());
+        clearButton.BackColor = Color.FromArgb(180, 83, 9);
+        actions.Controls.Add(clearButton);
+        var backButton = Ui.Button("Regresar", (_, _) => Close());
+        backButton.BackColor = Color.SlateGray;
+        actions.Controls.Add(backButton);
+        Controls.Add(actions);
+        result.Location = new Point(75, 470);
+        result.Size = new Size(685, 70);
+        result.Text = "Resultado: —";
+        Controls.Add(result);
+    }
+
+    private void Calculate(Func<double[], double> operation)
+    {
+        if (!TryGetValues(out var numbers)) return;
+        try
+        {
+            result.Text = $"Resultado: {operation(numbers):N2}";
+        }
+        catch (DivideByZeroException)
+        {
+            MessageBox.Show("No es posible dividir entre cero.", "Operación no válida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private static double Divide(double[] numbers)
+    {
+        var total = numbers[0];
+        foreach (var number in numbers.Skip(1))
+        {
+            if (number == 0) throw new DivideByZeroException();
+            total /= number;
+        }
+        return total;
+    }
+
+    private bool TryGetValues(out double[] numbers)
+    {
+        numbers = new double[values.Length];
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (!double.TryParse(values[i].Text, NumberStyles.Float, CultureInfo.CurrentCulture, out numbers[i]))
+            {
+                MessageBox.Show($"Escribe un número válido en el campo Número {i + 1}.", "Dato no válido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                values[i].Focus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void Clear()
+    {
+        foreach (var value in values) value.Clear();
+        result.Text = "Resultado: —";
+        values[0].Focus();
+    }
+}
+
+namespace Actividad2;
+
+public sealed class PersonalDataForm : Form
+{
+    private readonly TextBox firstName = Ui.TextBox();
+    private readonly TextBox lastName = Ui.TextBox();
+    private readonly TextBox address = Ui.TextBox(true);
+    private readonly TextBox city = Ui.TextBox();
+    private readonly ComboBox civilStatus = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 260 };
+
+    public PersonalDataForm()
+    {
+        Ui.Configure(this, "Datos personales");
+        Size = new Size(850, 650);
+        Controls.Add(Ui.Header("Datos personales", "Completa la información solicitada"));
+        civilStatus.Items.AddRange(["Soltero(a)", "Casado(a)", "Divorciado(a)", "Viudo(a)"]);
+
+        var form = new TableLayoutPanel { Location = new Point(65, 125), Size = new Size(510, 320), ColumnCount = 2, RowCount = 5, BackColor = Color.White, Padding = new Padding(24) };
+        form.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 39));
+        form.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 61));
+        AddRow(form, 0, "Nombre:", firstName);
+        AddRow(form, 1, "Apellido:", lastName);
+        AddRow(form, 2, "Dirección:", address);
+        AddRow(form, 3, "Ciudad:", city);
+        AddRow(form, 4, "Estado civil:", civilStatus);
+        Controls.Add(form);
+
+        var presentation = new Panel { Location = new Point(605, 125), Size = new Size(170, 320), BackColor = Ui.Navy };
+        presentation.Paint += (_, e) =>
+        {
+            e.Graphics.FillEllipse(Brushes.White, 45, 48, 80, 80);
+            using var font = new Font("Segoe UI", 44, FontStyle.Bold);
+            e.Graphics.DrawString("☺", font, Brushes.White, 45, 150);
+        };
+        presentation.Controls.Add(new Label { Text = "Tu perfil", ForeColor = Color.White, Font = new Font("Segoe UI", 14, FontStyle.Bold), AutoSize = true, Location = new Point(42, 260) });
+        Controls.Add(presentation);
+        Controls.Add(Ui.Button("Guardar datos", new Point(342, 480), (_, _) => Save()));
+        Controls.Add(Ui.Button("Cuestionario médico", new Point(65, 480), (_, _) => new MedicalForm().ShowDialog(this)));
+        Controls.Add(Ui.Button("Regresar", new Point(600, 480), (_, _) => Close(), Color.SlateGray));
+    }
+
+    private static void AddRow(TableLayoutPanel panel, int row, string label, Control input)
+    {
+        panel.RowStyles.Add(new RowStyle(SizeType.Percent, 20));
+        panel.Controls.Add(new Label { Text = label, AutoSize = true, Anchor = AnchorStyles.Left, Font = new Font("Segoe UI", 10, FontStyle.Bold) }, 0, row);
+        input.Anchor = AnchorStyles.Left;
+        panel.Controls.Add(input, 1, row);
+    }
+
+    private void Save()
+    {
+        if (string.IsNullOrWhiteSpace(firstName.Text) || string.IsNullOrWhiteSpace(lastName.Text) || civilStatus.SelectedIndex < 0)
+        {
+            MessageBox.Show("Completa al menos nombre, apellido y estado civil.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        MessageBox.Show("Los datos personales se registraron correctamente.", "Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+}
+
+namespace Actividad2;
+
+internal static class Program
+{
+    [STAThread]
+    private static void Main()
+    {
+        ApplicationConfiguration.Initialize();
+        Application.Run(new LoginForm());
+    }
+}
+
+using System.Drawing.Drawing2D;
+
+namespace Actividad2;
+
+internal static class Ui
+{
+    public static readonly Color Navy = Color.FromArgb(22, 52, 92);
+    public static readonly Color Blue = Color.FromArgb(37, 99, 235);
+    public static readonly Color Light = Color.FromArgb(241, 245, 249);
+
+    public static void Configure(Form form, string title)
+    {
+        form.Text = title + " | Universidad";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.BackColor = Light;
+        form.Font = new Font("Segoe UI", 10F);
+        form.Icon = SystemIcons.Shield;
+        form.MinimumSize = new Size(720, 480);
+    }
+
+    public static Panel Header(string title, string subtitle)
+    {
+        var panel = new Panel { Dock = DockStyle.Top, Height = 92, BackColor = Navy };
+        panel.Paint += (_, e) =>
+        {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            using var brush = new SolidBrush(Color.FromArgb(70, Color.White));
+            e.Graphics.FillEllipse(brush, 18, 17, 58, 58);
+            using var font = new Font("Segoe UI", 25, FontStyle.Bold);
+            e.Graphics.DrawString("U", font, Brushes.White, 30, 24);
+        };
+        panel.Controls.Add(new Label { Text = title, ForeColor = Color.White, Font = new Font("Segoe UI", 19, FontStyle.Bold), AutoSize = true, Location = new Point(92, 20) });
+        panel.Controls.Add(new Label { Text = subtitle, ForeColor = Color.FromArgb(210, 225, 245), AutoSize = true, Location = new Point(94, 56) });
+        return panel;
+    }
+
+    public static Button Button(string text, EventHandler? click = null)
+    {
+        var button = new Button { Text = text, AutoSize = true, BackColor = Blue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Padding = new Padding(14, 7, 14, 7), Cursor = Cursors.Hand };
+        button.FlatAppearance.BorderSize = 0;
+        if (click is not null) button.Click += click;
+        return button;
+    }
+
+    public static Button Button(string text, Point location, EventHandler click, Color? background = null)
+    {
+        var button = Button(text, click);
+        button.Location = location;
+        if (background.HasValue) button.BackColor = background.Value;
+        return button;
+    }
+
+    public static TextBox TextBox(bool multiline = false) => new()
+    {
+        Width = 260,
+        Multiline = multiline,
+        Height = multiline ? 58 : 30,
+        BorderStyle = BorderStyle.FixedSingle
+    };
+}
+
+bin/
+obj/
+.dotnet-cli/
+*.zip
+
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Actividad2</AssemblyName>
+    <RootNamespace>Actividad2</RootNamespace>
+  </PropertyGroup>
+</Project>
