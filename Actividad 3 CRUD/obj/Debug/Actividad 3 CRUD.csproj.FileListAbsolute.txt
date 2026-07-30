@@ -1,0 +1,7 @@
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\bin\Debug\Actividad 3 CRUD.exe.config
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\bin\Debug\Actividad 3 CRUD.exe
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\bin\Debug\Actividad 3 CRUD.pdb
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\obj\Debug\Actividad 3 CRUD.csproj.AssemblyReference.cache
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\obj\Debug\Actividad 3 CRUD.csproj.CoreCompileInputs.cache
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\obj\Debug\Actividad 3 CRUD.exe
+C:\Users\LDavid\Desktop\Actividades IDS\Lenguajes de Programación III\ACT 3\Actividad 3 CRUD\obj\Debug\Actividad 3 CRUD.pdb
