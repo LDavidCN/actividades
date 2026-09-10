@@ -1,0 +1,131 @@
+USE [AkirasBoutiques];
+GO
+
+/* Actividad 1 - Luis David Camarena Nava*/
+IF OBJECT_ID(N'dbo.Empleados', N'U') IS NOT NULL
+    THROW 50001, N'La tabla dbo.Empleados ya existe.', 1;
+IF OBJECT_ID(N'dbo.Sucursales', N'U') IS NOT NULL
+    THROW 50002, N'La tabla dbo.Sucursales ya existe.', 1;
+GO
+
+CREATE TABLE dbo.Sucursales (
+    id_sucursal       INT           NOT NULL,
+    nombre_sucursal   VARCHAR(100)  NOT NULL,
+    id_encargado      INT           NOT NULL,
+    direccion         VARCHAR(160)  NOT NULL,
+    telefono          VARCHAR(15)   NOT NULL,
+    ciudad            VARCHAR(60)   NOT NULL,
+    estado            VARCHAR(60)   NOT NULL,
+    CONSTRAINT PK_Sucursales PRIMARY KEY (id_sucursal),
+    CONSTRAINT UQ_Sucursales_nombre UNIQUE (nombre_sucursal),
+    CONSTRAINT UQ_Sucursales_encargado UNIQUE (id_encargado)
+);
+
+CREATE TABLE dbo.Empleados (
+    id_empleado       INT           NOT NULL,
+    nombre            VARCHAR(100)  NOT NULL,
+    direccion         VARCHAR(160)  NOT NULL,
+    telefono          VARCHAR(15)   NOT NULL,
+    edad              TINYINT       NOT NULL,
+    id_sucursal       INT           NOT NULL,
+    correo_electronico VARCHAR(120) NOT NULL,
+    contrasena_hash   VARBINARY(32) NOT NULL,
+    CONSTRAINT PK_Empleados PRIMARY KEY (id_empleado),
+    CONSTRAINT UQ_Empleados_correo UNIQUE (correo_electronico),
+    CONSTRAINT CK_Empleados_edad CHECK (edad BETWEEN 18 AND 70)
+);
+GO
+
+/* Las sucursales se insertan primero; posteriormente se valida quiÃ©n es su encargado. */
+INSERT INTO dbo.Sucursales
+    (id_sucursal, nombre_sucursal, id_encargado, direccion, telefono, ciudad, estado)
+VALUES
+    (1, N'Akira''s Boutique: Las Mercedes', 101, N'Calle Roble #507 Fracc. Las Mercedes', N'4447831225', N'San Luis PotosÃ­', N'San Luis PotosÃ­'),
+    (2, N'Akira''s Boutique: Obraje', 201, N'Calle Dr. JesÃºs DÃ­az de LeÃ³n #438 col. Obraje', N'4493780921', N'Aguascalientes', N'Aguascalientes'),
+    (3, N'Akira''s Boutique: GalerÃ­as MazatlÃ¡n', 301, N'Av. de la Marina #6204, Marina, local 35', N'6692932059', N'MazatlÃ¡n', N'Sinaloa'),
+    (4, N'Akira''s Boutique: Zapopan', 401, N'Av. Manuel J. Clouthier 525 col. Benito JuÃ¡rez', N'3337841230', N'Zapopan', N'Jalisco'),
+    (5, N'Akira''s Boutique: Melchor', 501, N'Av. Melchor Ocampo #2528 Zona Centro', N'6143906721', N'Chihuahua', N'Chihuahua'),
+    (6, N'Akira''s Boutique: ConstituciÃ³n', 601, N'Calle ConstituciÃ³n #106 Zona Centro', N'6181962954', N'Durango', N'Durango'),
+    (7, N'Akira''s Boutique: Centro', 701, N'Av. Hidalgo #338 Zacatecas Centro', N'4929301250', N'Zacatecas', N'Zacatecas');
+
+INSERT INTO dbo.Empleados
+    (id_empleado, nombre, direccion, telefono, edad, id_sucursal, correo_electronico, contrasena_hash)
+VALUES
+    (101, N'Sonia Alejandra FernÃ¡ndez Moreno', N'Calle Roble #507 Fracc. Las Mercedes', N'4447831225', 39, 1, N'sonia.fernandez@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Sonia2026!')),
+    (102, N'Pedro Antonio Salas Vega', N'Calle Jacarandas #144', N'4443011021', 28, 1, N'pedro.salas@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Pedro2026!')),
+    (103, N'Laura Jimena Torres Gil', N'Av. Venustiano Carranza #892', N'4443011022', 26, 1, N'laura.torres@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Laura2026!')),
+    (104, N'Diego Armando Rivera Cruz', N'Calle Cedro #61', N'4443011023', 31, 1, N'diego.rivera@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Diego2026!')),
+    (105, N'Karla Ivonne Medina Soto', N'Calle Naranjo #328', N'4443011024', 24, 1, N'karla.medina@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Karla2026!')),
+    (106, N'Marisol Fuentes Lara', N'Calle Olivo #115', N'4443011025', 33, 1, N'marisol.fuentes@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Marisol2026!')),
+    (201, N'Fernando CalderÃ³n Ayala', N'Calle Dr. JesÃºs DÃ­az de LeÃ³n #438 col. Obraje', N'4493780921', 42, 2, N'fernando.calderon@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Fernando2026!')),
+    (202, N'Andrea Paola Ruiz LeÃ³n', N'Calle Libertad #207', N'4493021101', 27, 2, N'andrea.ruiz@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Andrea2026!')),
+    (203, N'Ricardo Emilio CastaÃ±eda', N'Av. Universidad #901', N'4493021102', 35, 2, N'ricardo.castaneda@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Ricardo2026!')),
+    (204, N'Natalia GÃ³mez Pineda', N'Calle Olmos #77', N'4493021103', 29, 2, N'natalia.gomez@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Natalia2026!')),
+    (205, N'Hugo Daniel MartÃ­nez SolÃ­s', N'Calle Madero #506', N'4493021104', 30, 2, N'hugo.martinez@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Hugo2026!')),
+    (206, N'Elena Robles Serrano', N'Calle Fresno #190', N'4493021105', 25, 2, N'elena.robles@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Elena2026!')),
+    (301, N'Daniela Fernanda DÃ­az Ordaz', N'Av. de la Marina #6204, Marina, local 35', N'6692932059', 36, 3, N'daniela.diaz@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Daniela2026!')),
+    (302, N'IvÃ¡n Arturo BeltrÃ¡n Reyes', N'Calle DelfÃ­n #24', N'6693031201', 32, 3, N'ivan.beltran@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Ivan2026!')),
+    (303, N'Ximena Lizbeth RÃ­os PeÃ±a', N'Av. del Mar #817', N'6693031202', 23, 3, N'ximena.rios@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Ximena2026!')),
+    (304, N'JosÃ© Manuel Acosta Luna', N'Calle Coral #390', N'6693031203', 34, 3, N'jose.acosta@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Jose2026!')),
+    (305, N'Paola Esmeralda Ortiz Cano', N'Calle Perla #82', N'6693031204', 28, 3, N'paola.ortiz@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Paola2026!')),
+    (306, N'Brenda SofÃ­a Valdez Mora', N'Calle TiburÃ³n #14', N'6693031205', 26, 3, N'brenda.valdez@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Brenda2026!')),
+    (401, N'Mario Alberto JimÃ©nez Salcido', N'Av. Manuel J. Clouthier 525 col. Benito JuÃ¡rez', N'3337841230', 44, 4, N'mario.jimenez@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Mario2026!')),
+    (402, N'Valeria Montserrat DÃ­az Cruz', N'Calle Independencia #302', N'3333041301', 27, 4, N'valeria.diaz@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Valeria2026!')),
+    (403, N'Sergio Eduardo Luna PÃ©rez', N'Av. Patria #91', N'3333041302', 38, 4, N'sergio.luna@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Sergio2026!')),
+    (404, N'MÃ³nica Araceli Navarro Ruiz', N'Calle Los Pinos #245', N'3333041303', 31, 4, N'monica.navarro@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Monica2026!')),
+    (405, N'AdriÃ¡n Felipe GuzmÃ¡n Silva', N'Calle Mezquite #330', N'3333041304', 29, 4, N'adrian.guzman@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Adrian2026!')),
+    (406, N'Gabriela Itzel Ramos Castro', N'Calle Loma Alta #171', N'3333041305', 24, 4, N'gabriela.ramos@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Gabriela2026!')),
+    (501, N'Yesenia Guadalupe Campos Rojo', N'Av. Melchor Ocampo #2528 Zona Centro', N'6143906721', 41, 5, N'yesenia.campos@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Yesenia2026!')),
+    (502, N'Carlos Alberto Varela NÃºÃ±ez', N'Calle Rosales #488', N'6143051401', 33, 5, N'carlos.varela@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Carlos2026!')),
+    (503, N'Fernanda Lizeth Ponce DÃ­az', N'Av. TecnolÃ³gico #605', N'6143051402', 22, 5, N'fernanda.ponce@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Fernanda2026!')),
+    (504, N'Miguel Ãngel Galindo Ruiz', N'Calle Allende #56', N'6143051403', 37, 5, N'miguel.galindo@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Miguel2026!')),
+    (505, N'Diana Carolina Velasco Ortiz', N'Calle 20 de Noviembre #702', N'6143051404', 28, 5, N'diana.velasco@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Diana2026!')),
+    (506, N'Roberto Israel PeÃ±a Mora', N'Calle Encino #99', N'6143051405', 30, 5, N'roberto.pena@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Roberto2026!')),
+    (601, N'Tamara Alejandra Bernal Ramos', N'Calle ConstituciÃ³n #106 Zona Centro', N'6181962954', 40, 6, N'tamara.bernal@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Tamara2026!')),
+    (602, N'Luis David Camarena Nava', N'Calle Victoria #214, Zona Centro', N'6183101501', 23, 6, N'luis.camarena@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'LuisDavid2026!')),
+    (603, N'Alejandra Paola Soto Reyes', N'Calle Negrete #630', N'6183101502', 27, 6, N'alejandra.soto@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Alejandra2026!')),
+    (604, N'Jorge Luis Carrillo Ortiz', N'Av. Dolores del RÃ­o #85', N'6183101503', 35, 6, N'jorge.carrillo@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Jorge2026!')),
+    (605, N'Mariana del RÃ­o TÃ©llez', N'Calle FÃ©nix #203', N'6183101504', 25, 6, N'mariana.delrio@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Mariana2026!')),
+    (701, N'Samuel Enrique Barrios Enciso', N'Av. Hidalgo #338 Zacatecas Centro', N'4929301250', 45, 7, N'samuel.barrios@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Samuel2026!')),
+    (702, N'Claudia Beatriz Ortega Luna', N'Calle Tacuba #146', N'4923061601', 30, 7, N'claudia.ortega@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Claudia2026!')),
+    (703, N'Ernesto FabiÃ¡n Rangel Soto', N'Calle del Bosque #610', N'4923061602', 36, 7, N'ernesto.rangel@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Ernesto2026!')),
+    (704, N'SofÃ­a Marlene Flores RÃ­os', N'Av. GonzÃ¡lez Ortega #69', N'4923061603', 26, 7, N'sofia.flores@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Sofia2026!')),
+    (705, N'Ã“scar IvÃ¡n NÃºÃ±ez Vera', N'Calle Mina #417', N'4923061604', 29, 7, N'oscar.nunez@akirasboutique.mx', HASHBYTES(N'SHA2_256', N'Oscar2026!'));
+GO
+
+ALTER TABLE dbo.Empleados WITH CHECK
+    ADD CONSTRAINT FK_Empleados_Sucursales
+    FOREIGN KEY (id_sucursal) REFERENCES dbo.Sucursales(id_sucursal);
+
+ALTER TABLE dbo.Sucursales WITH CHECK
+    ADD CONSTRAINT FK_Sucursales_Encargado
+    FOREIGN KEY (id_encargado) REFERENCES dbo.Empleados(id_empleado);
+GO
+
+-- Consulta 1: empleados y la sucursal a la que pertenecen.
+SELECT e.id_empleado, e.nombre AS empleado, s.nombre_sucursal, e.edad, e.correo_electronico
+FROM dbo.Empleados AS e
+INNER JOIN dbo.Sucursales AS s ON s.id_sucursal = e.id_sucursal
+ORDER BY s.id_sucursal, e.id_empleado;
+
+-- Consulta 2: cada sucursal y el empleado que la administra.
+SELECT s.id_sucursal, s.nombre_sucursal, e.nombre AS encargado, s.ciudad, s.estado
+FROM dbo.Sucursales AS s
+INNER JOIN dbo.Empleados AS e ON e.id_empleado = s.id_encargado
+ORDER BY s.id_sucursal;
+
+-- Consulta 3: cantidad de empleados por sucursal.
+SELECT s.nombre_sucursal, COUNT(e.id_empleado) AS total_empleados
+FROM dbo.Sucursales AS s
+LEFT JOIN dbo.Empleados AS e ON e.id_sucursal = s.id_sucursal
+GROUP BY s.nombre_sucursal
+ORDER BY total_empleados DESC, s.nombre_sucursal;
+
+-- Consulta 4: empleados mayores de 30 aÃ±os.
+SELECT e.nombre, e.edad, s.nombre_sucursal, s.ciudad
+FROM dbo.Empleados AS e
+INNER JOIN dbo.Sucursales AS s ON s.id_sucursal = e.id_sucursal
+WHERE e.edad > 30
+ORDER BY e.edad DESC, e.nombre;
+GO
+
