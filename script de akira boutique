@@ -1,0 +1,256 @@
+USE [master]
+GO
+/****** Objeto: Database [Akiras Boutiuque.bacpac] Fecha de script: 22/09/2026 20:40:48 ******/
+CREATE DATABASE [Akiras Boutiuque.bacpac]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'Akiras Boutiuque.bacpac_Data', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\Akiras Boutiuque.bacpac.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+ LOG ON 
+( NAME = N'Akiras Boutiuque.bacpac_Log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\Akiras Boutiuque.bacpac.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [Akiras Boutiuque.bacpac].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET  MULTI_USER 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [Akiras Boutiuque.bacpac]
+GO
+/****** Objeto: Table [dbo].[categoria] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[categoria](
+	[id_categoria] [int] NOT NULL,
+	[nombre] [text] NOT NULL,
+	[descripcion] [text] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_categoria] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Objeto: Table [dbo].[cliente] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[cliente](
+	[id_cliente] [int] NOT NULL,
+	[nombre] [text] NOT NULL,
+	[apellido] [text] NOT NULL,
+	[direccion] [text] NOT NULL,
+	[fec_nac] [date] NOT NULL,
+	[telefono] [int] NOT NULL,
+	[email] [text] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_cliente] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Objeto: Table [dbo].[detalle] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[detalle](
+	[id_detalle] [int] NOT NULL,
+	[id_producto] [int] NOT NULL,
+	[cantidad] [int] NOT NULL,
+	[precio] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_detalle] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Objeto: Table [dbo].[Empleados] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Empleados](
+	[id_empleado] [int] NOT NULL,
+	[nombre] [varchar](100) NOT NULL,
+	[direccion] [varchar](160) NOT NULL,
+	[telefono] [varchar](15) NOT NULL,
+	[edad] [tinyint] NOT NULL,
+	[id_sucursal] [int] NOT NULL,
+	[correo_electronico] [varchar](120) NOT NULL,
+	[contrasena_hash] [varbinary](32) NOT NULL,
+ CONSTRAINT [PK_Empleados] PRIMARY KEY CLUSTERED 
+(
+	[id_empleado] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Empleados_correo] UNIQUE NONCLUSTERED 
+(
+	[correo_electronico] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Objeto: Table [dbo].[factura] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[factura](
+	[id_factura] [int] NOT NULL,
+	[id_cliente] [int] NOT NULL,
+	[fecha] [date] NULL,
+	[id_detalle] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_factura] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Objeto: Table [dbo].[producto] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[producto](
+	[id_producto] [int] NOT NULL,
+	[nombre] [text] NOT NULL,
+	[precio] [int] NOT NULL,
+	[stock] [int] NOT NULL,
+	[id_categoria] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id_producto] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Objeto: Table [dbo].[Sucursales] Fecha de script: 22/09/2026 20:40:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Sucursales](
+	[id_sucursal] [int] NOT NULL,
+	[nombre_sucursal] [varchar](100) NOT NULL,
+	[id_encargado] [int] NOT NULL,
+	[direccion] [varchar](160) NOT NULL,
+	[telefono] [varchar](15) NOT NULL,
+	[ciudad] [varchar](60) NOT NULL,
+	[estado] [varchar](60) NOT NULL,
+ CONSTRAINT [PK_Sucursales] PRIMARY KEY CLUSTERED 
+(
+	[id_sucursal] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Sucursales_encargado] UNIQUE NONCLUSTERED 
+(
+	[id_encargado] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Sucursales_nombre] UNIQUE NONCLUSTERED 
+(
+	[nombre_sucursal] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[detalle]  WITH CHECK ADD  CONSTRAINT [id_producto] FOREIGN KEY([id_producto])
+REFERENCES [dbo].[producto] ([id_producto])
+GO
+ALTER TABLE [dbo].[detalle] CHECK CONSTRAINT [id_producto]
+GO
+ALTER TABLE [dbo].[Empleados]  WITH CHECK ADD  CONSTRAINT [FK_Empleados_Sucursales] FOREIGN KEY([id_sucursal])
+REFERENCES [dbo].[Sucursales] ([id_sucursal])
+GO
+ALTER TABLE [dbo].[Empleados] CHECK CONSTRAINT [FK_Empleados_Sucursales]
+GO
+ALTER TABLE [dbo].[factura]  WITH CHECK ADD  CONSTRAINT [id_cliente] FOREIGN KEY([id_cliente])
+REFERENCES [dbo].[cliente] ([id_cliente])
+GO
+ALTER TABLE [dbo].[factura] CHECK CONSTRAINT [id_cliente]
+GO
+ALTER TABLE [dbo].[factura]  WITH CHECK ADD  CONSTRAINT [id_detalle] FOREIGN KEY([id_detalle])
+REFERENCES [dbo].[detalle] ([id_detalle])
+GO
+ALTER TABLE [dbo].[factura] CHECK CONSTRAINT [id_detalle]
+GO
+ALTER TABLE [dbo].[producto]  WITH CHECK ADD  CONSTRAINT [id_categoria] FOREIGN KEY([id_categoria])
+REFERENCES [dbo].[categoria] ([id_categoria])
+GO
+ALTER TABLE [dbo].[producto] CHECK CONSTRAINT [id_categoria]
+GO
+ALTER TABLE [dbo].[Sucursales]  WITH CHECK ADD  CONSTRAINT [FK_Sucursales_Encargado] FOREIGN KEY([id_encargado])
+REFERENCES [dbo].[Empleados] ([id_empleado])
+GO
+ALTER TABLE [dbo].[Sucursales] CHECK CONSTRAINT [FK_Sucursales_Encargado]
+GO
+ALTER TABLE [dbo].[Empleados]  WITH CHECK ADD  CONSTRAINT [CK_Empleados_edad] CHECK  (([edad]>=(18) AND [edad]<=(70)))
+GO
+ALTER TABLE [dbo].[Empleados] CHECK CONSTRAINT [CK_Empleados_edad]
+GO
+USE [master]
+GO
+ALTER DATABASE [Akiras Boutiuque.bacpac] SET  READ_WRITE 
+GO
